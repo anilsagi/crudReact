@@ -1,42 +1,82 @@
+import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Table from './Table';
+import Form from './Form';
+// import Portal from './Portal'
+import {deleteData, getData, postData, putData} from './api';
 import './App.css';
-import { useState } from 'react';
-import  ReactDOM  from 'react-dom';
+// import Crud from './basicCrud';
 
-//using portal we can display the content outside the parent
-function Model(props){
+
+
+
+
+const App = () => {
+
+  const [products,setProdcuts] = useState([]); //initially table empty
+  const [showForm, setShowForm] = useState(false);//form to enter data
+  const [edit, setEdit] = useState(false);//edit flag
+  const [initForm,setForm] = useState({     //initial form values
+    name:'', price:'' ,category:''
+  })
+
+  useEffect(()=>{
+    getProducts();   //setting data to table, calling
+  },[])
+
+  let getProducts = async ()=>{  //function to set data to table
+    let res = await getData();
+     console.log("res", res.data);
+     setProdcuts(res.data);
+  }
+
+  let deleteProduct = async (id)=>{  // function to data from the table
+    await deleteData(id);
+    getProducts();
+  }
+
+  let addProduct = async (prod)=>{ // add data to
+    let data = {
+      name:prod.name,
+      price:prod.price,
+      category:prod.category
+    }
+    if(edit){
+      await putData(prod.id,data); //edit 2 pargs thru put-method
+    } else 
+    await postData(data);  //post one arg
+    getProducts();
+    setShowForm(false);     //form close
+  }
+
+  let editProduct = async (data)=>{
+    // await postData(data);
+    setForm(data);
+    setShowForm(true);
+    setEdit(true);
+  }
+
+
+  let openForm= ()=>{
+    setShowForm(!showForm);
+    setForm({ name:'', price:'' ,category:''})
+
+  }
+
+  let closeForm= ()=>{
+    setShowForm(false);
+  }
+
   return (
-    ReactDOM.createPortal(
-      <div className='model-overlay'>
-      <div className="content">
-        <h1>
-            Model Heading
-        </h1>
-        <p>
-          This is Modal content, click close to close the modal
-        </p>
-        <button className='btn btn-danger' onClick={props.close}>Close</button>
-      </div>
-  </div>
-      ,document.getElementById("model-root"))
-   
-    )
-}
-
-function App() {
-
-  const[show, setShow] = useState(false);
-
-  const toogleModel = ()=>{
-    return setShow(!show)
-;  }
-
-  return (
-    <div className="App">
-      <button className='btn btn-primary m-5' onClick={toogleModel}>Open modal</button>
-
-      {show && <Model close={toogleModel} />}
+    <div className='wrapper m-5 w-50'>
+    {/* <div><Portal/></div> */}
+    <h2 className='text-primary'>CRUD Operations</h2>
+    <button className='btn btn-primary' onClick={openForm} >Add Prodcuts</button>
+    <Table productData={products} deleteProd={deleteProduct} edit={editProduct}/>
+    {showForm && <Form close={closeForm} data={initForm} add = {addProduct} />}
+    {/* <Crud/> */}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

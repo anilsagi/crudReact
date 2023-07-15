@@ -1,0 +1,35 @@
+{
+  "Products": [
+    {
+      "name": "redmi note 11",
+      "price": "290005",
+      "category": "mobiles",
+      "id": 1
+    },
+    {
+      "name": "Vivo v20",
+      "price": 20000,
+      "category": "mobiles",
+      "id": 2
+    },
+    {
+      "name": "Samsung galaxy f41",
+      "price": 16000,
+      "category": "mobiles",
+      "id": 3
+    },
+    {
+      "name": "i phone",
+      "price": "87879",
+      "category": "llmlml",
+      "Category": "mobiles",
+      "id": 4
+    },
+    {
+      "name": "poco",
+      "price": "2323",
+      "category": "mobiles",
+      "id": 5
+    }
+  ]
+}
